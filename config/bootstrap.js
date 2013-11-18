@@ -19,13 +19,6 @@ module.exports.bootstrap = function (cb) {
 	    // Runs every day
 	    // at 00:00:00.
 	    galaxie.cycle();
-	    Cycles.findOneByIdCycles(1).done(function (err, cycle) {
-	    	cycle.Count = parseInt(cycle.Count) + 1;
-	    	cycle.save(function(err) {
-	    		console.log("Jour "+cycle.Count);
-	    		//Cycle save
-	    	});
-	    });
 	  }, function () {
 	    // This function is executed when the job stops
 	    console.log("Mide à jour du cycle finit");
