@@ -1,0 +1,288 @@
+ /* Styles included inline since you'll probably be deleting this page anyway */
+    html,body
+    {
+        text-align:left;
+        font-size:1em
+    }
+    html,body,img,form,textarea,input,fieldset,div,p,div,ul,li,ol,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,code
+    {
+        margin:0;
+        padding:0
+    }
+    ul,li
+    {
+        list-style:none
+    }
+    img
+    {
+        display:block
+    }
+    a img
+    {
+        border:0
+    }
+    a
+    {
+        text-decoration:none;
+        font-weight:normal;
+        font-family:inherit
+    }
+    *:active,*:focus
+    {
+        outline:0;
+        -moz-outline-style:none
+    }
+    h1,h2,h3,h4,h5,h6
+    {
+        font-weight:normal
+    }
+    div.clear
+    {
+        clear:both
+    }
+    .clearfix:after
+    {
+        clear:both;
+        content:".";
+        display:block;
+        font-size:0;
+        height:0;
+        line-height:0;
+        visibility:hidden
+    }
+    body
+    {
+        font-family:"Open Sans",Arial,sans-serif;
+        font-weight:300;
+        font-size:15px;
+        color: white;
+    }
+    h1
+    {
+        color:#0c8da0;
+        font-size:2em;
+        font-weight:300
+    }
+    h2
+    {
+        font-size:1.5em;
+        font-weight:300;
+        margin-top:4%
+    }
+    h3
+    {
+        font-size:1.25em;
+        font-weight:300;
+        font-style:italic;
+        margin-bottom:5px
+    }
+    h4
+    {
+        color:#0c8da0;
+        font-weight:300;
+        font-size:1.5em
+    }
+    span
+    {
+        font-weight:700
+    }
+    ul
+    {
+        margin-top:5%;
+        margin-bottom:5%
+    }
+    a
+    {
+        text-decoration:none;
+        color:inherit
+    }
+    p
+    {
+        margin-bottom:7px;
+        font-size:.9em
+    }
+    input
+    {
+        width: 180px;
+        margin-bottom: 10px;
+        height: 20px;
+        border: none;
+        border-radius: 5px;
+        color: #0c8da0;
+    }
+    button
+    {
+        border-radius: 20%;
+        background-color: #0c8da0;
+        color: white;
+        border: none;
+        height: 30px;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+    .container
+    {
+        width:70%;
+        margin:0 auto;
+        padding:0 4%
+    }
+    .top-bar
+    {
+        position:relative;
+        padding-top:10px;
+        background-color:#001c20;
+        height:55px
+    }
+    .top-bar input
+    {
+        padding: 5px;   
+        margin-top: 5px;  
+        width: 100px;  
+    }
+    .top-bar #main-title
+    {
+        float: left;
+    }
+    .top-bar #connexion
+    {
+        float: right;
+    }
+    .top-bar button
+    {
+        width: 40px;
+    }
+    .main
+    {
+        float:left;
+        width:60%;
+        height:555px;
+        margin-top:50px
+    }
+    .steps
+    {
+        height:250px
+    }
+    .side-bar
+    {
+        width:34%;
+        height:555px;
+        float:left;
+        border-left:1px solid #0c8da0;
+        border-right:1px solid #0c8da0;
+        background-image: url("/images/bgPlaneteRender.png");
+        margin-left:25px;
+        padding-top:50px;
+        padding-left:25px
+    }
+    .side-bar ul
+    {
+        margin-bottom:10%
+    }
+    .side-bar ul li
+    {
+        margin-top:5px;
+        margin-bottom:.25em
+    }
+    .side-bar ul li a
+    {
+        margin-bottom:.25em
+    }
+
+    #inscription .label
+    {
+        font-weight: normal;
+        width: 250px;
+        display: block;
+        float: left;
+    }
+    #inscription input
+    {
+        margin-bottom: 25px;
+        padding: 5px;
+        float right;
+    }
+    #inscription button
+    {
+        width: 80px;
+        margin-left: 125px;
+    }
+
+    #planete
+    {
+        border: 1px solid grey;
+        background-image: url("/images/bgPlaneteRender.png");
+        font-family: "consolas";
+        width: 555px;
+        min-height: 300px;
+        color: white;
+        border-radius: 15px;
+    }
+
+    #planeteRender
+    {
+        width: 300px;
+        height: 275px;
+        float: left;
+    }
+    #planeteRender p
+    {
+        width: 100%;
+        padding-top: 2px;
+        text-align: center;
+        padding-top: 15px;
+    }
+
+    #planete .infoPlanete
+    {
+        float: right;
+        text-align: left;
+        width: 250px;
+        padding-top: 60px;
+        font-weight: normal;
+    }
+
+    #planete .infoPlanete select
+    {
+        width: 59px;
+        padding: 1px 2px;
+        font-size: 11px;
+        line-height: 1;
+        border: 0;
+        border-radius: 0;
+        height: 22px;
+        -webkit-appearance: none;
+        background: url(/images/picto_select.png) no-repeat right #000000;
+        color: white;
+        border: 1px solid #000000;
+        border-radius: 9px;
+        background-size: contain;
+        margin-top: 5px;
+    }
+
+    #planete .link
+    {
+        font-size: 12px;
+        float: right;
+        margin-top: 60px;
+        margin-right: 35px;
+    }
+    #planete .link:hover
+    {
+        text-decoration: underline;
+    }
+
+    #planetes .planete
+    {
+        width: 100px;
+        border: 1px solid grey;
+        background-image: url("/images/bgPlaneteRender.png");
+        text-align: center;
+        border-radius: 15px;
+        font-family: "consolas";
+        padding: 10px 0;
+        cursor: pointer;
+        margin-right: 25px;
+        float: left;    
+        margin-bottom: 25px;
+    }
+

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--
+        For demonstration purposes, the `title` is dynamically set here based on
+        your `sails.config.appName` to show that you can inject data into layouts
+        exactly the same way as with your other view templates.
+    -->
+    <title><%- title %></title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <!--
+
+      Stylesheets
+      ========================
+
+      You can link any CSS, LESS, or image files in your `assets` directory
+      as you would normally: using <link/> tags.
+      
+    -->
+    <!--STYLES-->
+    <link rel="stylesheet" href="/linker/styles/general.css">
+    <!--STYLES END-->
+    
+    <!--SCRIPTS-->
+    <script src="/linker/js/socket.io.js"></script>
+    <script src="/linker/js/sails.io.js"></script>
+    <script src="/linker/js/app.js"></script>
+    <script src="/linker/js/jquery-min@1.10.2.js"></script>
+    <script src="/linker/js/three.js"></script>
+    <!--SCRIPTS END-->
+    <!--
+
+      Support for LESS included by default
+      ================================================
+
+      LESS files are automatically compiled when they change using the Gruntfile
+      located in the top-level of this Sails app.  If you run into issues with styles
+      not reloading, check the Sails log output in your console for LESS compilation errors.
+      If necessary, shut down and then lift your app again.
+      
+    -->
+
+    
+  </head>
+
+  <body id="bg">
+
+    <% 
+    if(typeof(joueur) != "undefined" && joueur != null) {
+    %>
+      <%- partial('menu/menuAuth') %>
+    <%
+    }
+    else {
+    %>
+      <%- partial('menu/menuUnauth') %>
+    <%
+    }
+    %>
+
+    <%- body %>
+    
+    <script type="text/javascript">
+      var hours = new Date().getHours();
+      $("#bg").css("background-image", "url('/images/backgrounds/"+hours+".jpg')");
+    </script>
+  </body>
+</html>

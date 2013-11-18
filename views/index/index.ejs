@@ -1,0 +1,106 @@
+<!-- Default home page -->
+<link type="text/css" href='http://sailsjs.org/styles/fonts.css' rel='stylesheet'/>
+<div class="container clearfix">
+    <div class="main">
+        <h4>About</h4><br />
+        <div class="steps">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ut tristique lacus. Nulla facilisi. Quisque rhoncus dui quis libero venenatis dignissim. Maecenas volutpat, orci et gravida semper, dolor lacus ultrices dolor, sit amet pellentesque libero purus ut lectus. Etiam id iaculis tellus. Suspendisse potenti. Morbi tincidunt tristique ante, eu tempor velit porta non. Etiam at dictum libero. Maecenas sed massa placerat, aliquam turpis non, pharetra sapien. Aliquam erat volutpat. Ut euismod, tortor vitae aliquam tempor, odio felis pellentesque est, sed congue magna libero quis nunc. Suspendisse a lacinia est, id faucibus sem. Nunc hendrerit quam vestibulum congue tempor. Donec non sapien dignissim velit tincidunt eleifend ac vel ligula.</p><br />
+            <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut congue felis quis magna mollis fermentum. Maecenas eu consectetur dui. Vivamus tempus nulla a ante dictum, eget consequat odio sollicitudin. Fusce pellentesque erat massa, ut iaculis sem congue id. Maecenas dictum orci vitae tortor consequat, non dictum mauris bibendum. Suspendisse varius, tortor sed sagittis pharetra, lacus mi fringilla nulla, et pharetra sapien leo viverra tortor. Fusce luctus augue enim, eget consectetur arcu tempus id.
+            </p>
+
+        </div>
+    </div>
+    <div class="side-bar">
+        <h4 id="new">
+            Inscription
+        </h4>
+        <br /><br />
+        <div id="inscription">
+            <input type="text" id="nom" name="nom" placeholder="Nom" /><br />
+            <input type="text" id="prenom" name="prenom" placeholder="Prénom" /><br />
+            <input type="text" id="pseudoIns" name="pseudoIns" placeholder="Pseudo" /><br />
+            <input type="text" id="mail" name="mail" placeholder="E-Mail" /><br />
+            <input type="password" id="passIns" name="passIns" placeholder="Mot de passe" /><br />
+            <input type="password" id="pass_confirm" name="pass_confirm" placeholder="Confirmation" /><br />
+            <button id="InscriptionButton">S'inscrire</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+//Appel ajax qui envoi username et passowrd à la page login en 
+    //en post pour connection
+    function login() {
+        var pseudo = $("#pseudo").val();
+        var pass = $("#pass").val();
+
+        if(pseudo && pass) 
+        {
+            $.post(
+                '/connexion',
+                {pseudo: pseudo, pass:pass},
+                function () {
+                    window.location = "/play";
+                }
+            ).fail(function(res) {
+                alert(res.getResponseHeader("error"));
+            });
+        }
+        else
+        {
+            alert("Pseudo et mot de passe sont requis.");
+        }
+    }
+    //Mise en place des event
+    $("#ConnexionButton").click(login);
+    $("#pseudo, #pass, #ConnexionButton").keydown(function (event){
+        if(event.which == 13)
+        {
+            login();
+        }
+    });
+
+    //Appel ajax qui envoi les infos pour l'inscription 
+    //a signup en post
+    function signup() {
+        var nom = $("#nom").val();
+        var prenom = $("#prenom").val();
+        var pseudo = $("#pseudoIns").val();
+        var mail = $("#mail").val();
+        var pass = $("#passIns").val();
+        var pass_confirm = $("#pass_confirm").val();
+
+        if (nom && prenom && pseudo && mail && pass && pass_confirm)
+        {
+            if(pass == pass_confirm)
+            {
+                $.post(
+                    '/new',
+                    {nom: nom, prenom:prenom, pseudo:pseudo, mail:mail, pass: pass},
+                    function () {
+                        window.location = "/";
+                    }
+                ).fail(function (res) {
+                    alert(res.getResponseHeader("error"));
+                });
+            }
+            else
+            {
+                alert("Les mots de passe sont différents.");
+            }
+        }
+        else
+        {
+            alert("Tous les champs sont requis.");
+        }
+    }
+    //Mise en place des events
+    $("#InscriptionButton").click(signup);
+    $("#nom, #prenom, #pseudoIns, #mail, #passIns, #pass_confirm, #InscriptionButton").keydown(function (event) {
+        if(event.which == 13)
+        {
+            signup();
+        }
+    });
+</script>
+</script>

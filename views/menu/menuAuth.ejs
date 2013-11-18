@@ -1,0 +1,12 @@
+<div class="top-bar">
+    <div class="container clearfix">
+        <h1 id="main-title">WarEmpire</h1>
+        <div id="connexion">
+            <% if(joueur) { %>
+            	<%= joueur.Pseudo %>
+        	<% } %>
+        	-
+        	<a href="/logout">Quitter</a>
+        </div>
+    </div>
+</div>
