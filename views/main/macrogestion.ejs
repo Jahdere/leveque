@@ -32,42 +32,7 @@
             %>
         </div>
     </div>
-    <div class="side-bar">
-        <h4 id="new">
-            Tableau de bord
-        </h4>
-        <br /><br />
-        <ul style="width: 150px;">
-            <li style="vertical-align: middle;">
-                <%= general.format_number(joueur.Ressources.Argent) %>
-                <img src="/images/picto/argent.png" alt="Argent" title="Argent"  style="width: 24px; height: 24px;display: inline;vertical-align: middle; float: right;"/>
-            </li>
-            <li style="vertical-align: middle;">
-                <%= general.format_number(joueur.Ressources.Aluminium) %>
-                <span style="float: right;">Alu.</span>
-            </li>
-            <li style="vertical-align: middle;">
-                <%= general.format_number(joueur.Ressources.Titane) %>
-                <span style="float: right;">Titane</span>
-            </li>
-            <li style="vertical-align: middle;">
-                <%= general.format_number(joueur.Ressources.Carbone) %>
-                <span style="float: right;">Carbone</span>
-            </li>
-            <li style="vertical-align: middle;">
-                <%= general.format_number(joueur.Ressources.Uranium) %>
-                <img src="/images/picto/uranium.png" alt="Uranium" title="Uranium"  style="width: 24px; height: 24px;display: inline;vertical-align: middle; float: right;"/>
-            </li>
-            <li style="vertical-align: middle;">
-                <%= general.format_number(joueur.Ressources.Energie) %>
-                <img src="/images/picto/energie.png" alt="Energie" title="Energie" style="width: 24px; height: 24px;display: inline;vertical-align: middle; float: right;"/>
-            </li>
-            <li style="vertical-align: middle;">
-                <%= general.format_number(joueur.Ressources.Matiere_Premiere) %>
-                <img src="/images/picto/MP2.png" alt="Matière première" title="Matière Première" style="width: 24px; height: 24px;display: inline;vertical-align: middle; float: right;"/>
-            </li>
-        </ul>
-    </div>
+    <%- partial('partials/TdB') %>
 </div>
 <script type="text/javascript">
 //Appel ajax qui envoi username et passowrd à la page login en 
