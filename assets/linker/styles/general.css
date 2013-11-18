@@ -245,6 +245,27 @@
         height: 80%;
         font-family: consolas;
     }
+    .side-bar #bilans .list-millitaires
+    {
+        width: 100%;
+        height: 80%;
+        font-family: consolas;
+        display: none;
+    }
+    .side-bar #bilans .list-espionnages
+    {
+        width: 100%;
+        height: 80%;
+        font-family: consolas;
+        display: none;
+    }
+    .side-bar #bilans .list-commerces
+    {
+        width: 100%;
+        height: 80%;
+        font-family: consolas;
+        display: none;
+    }
 
     .side-bar #bilans .list-bilans table
     {

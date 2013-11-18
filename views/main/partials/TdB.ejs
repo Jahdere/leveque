@@ -36,10 +36,10 @@
     </ul>
     <div id="bilans">
 		<ul>
-			<li title="Général" class="active">Bilans</li>
-			<li title="Millitaires">Milli.</li>
-			<li title="Espionnages">Espion.</li>
-			<li title="Commerces">Comme.</li>
+			<li title="bilans" class="active">Bilans</li>
+			<li title="millitaires">Milli.</li>
+			<li title="espionnages">Espion.</li>
+			<li title="commerces">Comme.</li>
 		</ul>
 		<div class="list-bilans">
 			<table>
@@ -49,5 +49,46 @@
 				</tr>
 			</table>
 		</div>
+		<div class="list-millitaires">
+			<table>
+				<tr>
+					<td>Rapport d'attaque</td>
+					<td>18/11 18:57</td>
+				</tr>
+			</table>
+		</div>
+		<div class="list-espionnages">
+			<table>
+				<tr>
+					<td>Rapport d'espionnage</td>
+					<td>18/11 18:57</td>
+				</tr>
+			</table>
+		</div>
+		<div class="list-commerces">
+			<table>
+				<tr>
+					<td>Rapport d'échange'</td>
+					<td>18/11 18:57</td>
+				</tr>
+			</table>
+		</div>
+
    	</div>
 </div>
+
+<script>
+	$("#bilans ul li").click(bilan);
+
+	function bilan()
+	{
+		var current_section = $("#bilans ul li.active");
+		var next_section = $(this);
+
+		current_section.removeClass("active");
+		$(".list-"+current_section.attr("title")).hide();
+		next_section.addClass("active");
+		$(".list-"+next_section.attr("title")).show();
+
+	}
+</script>
