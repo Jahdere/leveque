@@ -14,7 +14,6 @@ module.exports = {
   */
   index: function (req, res)
   {
-    console.log(req.session.joueur);
     Joueurs.findOneByPseudo(req.session.joueur.Pseudo).done(function (err, joueur) {
       joueur.getRessources(function (ressource) {
         joueur.Ressources = ressource;
@@ -31,9 +30,14 @@ module.exports = {
     Joueurs.findOneByPseudo(req.session.joueur.Pseudo).done(function (err, joueur) {
       joueur.getRessources(function (ressource) {
         joueur.Ressources = ressource;
-        joueur.getAllPlanetes(function (planetes) {
-          joueur.Planetes = planetes;
-          res.view({joueur: joueur});
+        Planetes.findByJoueursId(joueur.idJoueurs).sort('type').done(function (err, planetes) {
+          if(err)
+            log.ErreurDb(err, "Récupération des planètes urbanisées", "MainController::macroGestion");
+          else
+          {
+            joueur.Planetes = planetes;
+            res.view({joueur: joueur});
+          }
         });
       });
     });   

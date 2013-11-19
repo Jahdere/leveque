@@ -104,7 +104,7 @@
     function changeImposition() {
         var newTaux = $("#Taux_Imposition").val().split("%");
         newTaux = newTaux[0];
-        alert(newTaux);
+
         $.post(
             '/update',
             {planete: <%= joueur.Planete.idPlanetes %>, taux:newTaux},

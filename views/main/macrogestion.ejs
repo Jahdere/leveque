@@ -3,47 +3,177 @@
 <div class="container clearfix">
     <div class="main">
         <h4>Empire</h4><br />
-        <div class="steps" id="planetes">
+        <div class="steps" id="macroEcran">
             <% 
+            typeUn = 0;
+            typeDeux = 0;
+            typeTrois = 0;
             for(i=0; i<joueur.Planetes.length;i++)
             {
-                %>
-                <div class="planete" <%if(joueur.Planetes[i].Type == 1) { %> style="border-color: #235685" <%} else if  (joueur.Planetes[i].Type == 2) { %> style="border-color: #501000" <% } else { %> style="border-color: #125632" <% }%>>
-                    <p><%= joueur.Planetes[i].Nom %></p>
-                    <%= joueur.Planetes[i].Coordonnees %><br /> 
-                    <% 
-                    if(joueur.Planetes[i].Type == 1)
+                if(joueur.Planetes[i].Type == 1)
+                {
+                    if (typeUn == 0)
                     {
-                        %>Urbanisée<%
-                    }
-                    else if(joueur.Planetes[i].Type == 2)
-                    {
-                        %>Minière<%
-                    }
-                    else
-                    {
-                        %>Agricoles<%
+                        typeUn = 1;
+                        %>
+                        <div class="groupePlanete">
+                            <h2>Urbanisées</h2>
+                        <%
                     }
                     %>
-                    <input type="hidden" name="id" id="id" value="<%= joueur.Planetes[i].idPlanetes %>" />
-                </div>
+                        <div class="planete">
+                            
+                            <span class="macroLink">
+                                <img src="/images/macroUrba.png"/>
+                                <b><%= joueur.Planetes[i].Nom %></b>  -  
+                                <span title="Coordonnées"><%= joueur.Planetes[i].Coordonnees %></span> - 
+                                <span title="Bonheur"><%= joueur.Planetes[i].Bonheur %>%</span> - 
+                                <span title="Bénéfice Matière Première">
+                                <%
+                                total = joueur.Planetes[i].Matiere_Premiere - Math.floor((10/365.25*parseInt(joueur.Planetes[i].Population))/1000000);
+                                if(total > 0) 
+                                {
+                                    %>
+                                    <span style="color: green">+ <%= total %></span>
+                                    <%
+                                }
+                                else
+                                {
+                                    %>
+                                    <span style="color: red">+ <%= total %></span>
+                                    <%
+                                }
+                                %>
+                                M.P</span> - Imposition
+                            <input type="hidden" name="id" id="id" value="<%= joueur.Planetes[i].idPlanetes %>" />
+                            </span>
+                             
+                            <select class="tauxImposition">
+                                <% 
+                                j = 0;
+                                while(j <= 100)
+                                {
+                                    if(j == joueur.Planetes[i].Taux_Imposition)
+                                    {
+                                        %>
+                                        <option selected><%= j %>%</option>
+                                        <%
+                                    }
+                                    else
+                                    {
+                                        %>
+                                        <option><%= j %>%</option>
+                                        <%
+                                    }
+                                    j += 10;
+                                }
+                                %>
+                            </select> 
+                            <input type="hidden" name="id" id="id" value="<%= joueur.Planetes[i].idPlanetes %>" />
+                        </div>
+
                 <%
+                }
+                if (joueur.Planetes[i].Type == 2)
+                {
+                    if (typeDeux == 0)
+                    {
+                        typeDeux = 1;
+                        %>
+                        </div>
+                        <div class="groupePlanete">
+                            <h2>Minières</h2>
+                        <%
+                    }
+                    %>
+                        <div class="planete">
+                            <span class="macroLink">
+                                <img src="/images/macroMiniere.png" />
+                                <%= joueur.Planetes[i].Nom %> - 
+                                <%= joueur.Planetes[i].Coordonnees %> - 
+                                Niveau <%= joueur.Planetes[i].Niveau_Extraction %> -
+                                <%
+                                    explode = joueur.Planetes[i].Extraction.split("#");
+                                    alu = joueur.Planetes[i].Niveau_Extraction * explode[0];
+                                    titane = joueur.Planetes[i].Niveau_Extraction * explode[1];
+                                    carbone = joueur.Planetes[i].Niveau_Extraction * explode[2];
+                                    uranium = joueur.Planetes[i].Niveau_Extraction * explode[3];
+                                %>
+                                Extraction <span title="Aluminium"><%= alu %></span> / <span title="Titane"><%= titane %></span> /  <span title="Carbone"><%= carbone %></span> / <span title="Uranium"><%= uranium %></span>
+                                <input type="hidden" name="id" id="id" value="<%= joueur.Planetes[i].idPlanetes %>" />
+                            </span>
+                        </div>
+                    <%
+                }
+
+                if (joueur.Planetes[i].Type == 3)
+                {
+                    if (typeTrois == 0)
+                    {
+
+                        typeTrois = 1;
+                        %>
+                        </div>
+                        <div class="groupePlanete">
+                            <h2>Agricoles</h2>
+                        <%
+                    }
+                     %>
+                    
+                        <div class="planete">
+                            <img src="/images/macroAgri.png" />
+                            <span class="macroLink">
+                                <b><%= joueur.Planetes[i].Nom %></b>  -  
+                                <%= joueur.Planetes[i].Coordonnees %> -
+                                Production : <%= joueur.Planetes[i].Matiere_Premiere %> Millions de T.
+                                <input type="hidden" name="id" id="id" value="<%= joueur.Planetes[i].idPlanetes %>" />
+                            </span>
+                        </div>
+                    </div>
+                    <%
+                }
             }
             %>
+            <br /><br /><br /><br />
+            <a href="/play" style="float: right;">Retour</a>
         </div>
+
     </div>
     <%- partial('partials/TdB') %>
 </div>
 <script type="text/javascript">
-//Appel ajax qui envoi username et passowrd à la page login en 
+    //Appel ajax 
     //en post pour connection
-    function redirect(test) {
-        var id = $(test).find("#id").val();
+    function redirect(e) {
+        var id = $(e).find("#id").val();
         window.location = "/micro/"+id;
     }
     //Mise en place de l'event
-    $(".planete").click(function () {
+    $(".groupePlanete .planete .macroLink").click(function () {
         redirect(this);
+    });
+
+    //Appel ajax qui envoi username et passowrd à la page login en 
+    //en post pour connection
+    function changeImposition(e) {
+        var newTaux = $(e).val().split("%");
+        newTaux = newTaux[0];
+        var id = $(e).next("#id").val();
+        $.post(
+            '/update',
+            {planete: id, taux:newTaux},
+            function () {
+                
+            }
+        ).fail(function(res) {
+            alert(res.getResponseHeader("error"));
+        });
+       
+        
+    }
+    //Mise en place des events
+    $(".groupePlanete .planete .tauxImposition").change(function() {
+        changeImposition(this);
     });
 </script>
 
