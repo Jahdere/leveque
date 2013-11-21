@@ -84,6 +84,14 @@ var rand_name = function ()
   return randomstring;
 }
 
+//Fonction qui retourne une session hasher
+var new_session = function (hasher)
+{
+  var session = Math.floor((Math.random()*31513513)+120321).toString();
+
+  return hasher.generate(session);
+}
+
 exports.encode = encode;
 exports.decode = decode;
 exports.new_session = new_session;
@@ -92,6 +100,7 @@ exports.timestamp_to_date = timestamp_to_date;
 exports.formate_date = formate_date;
 exports.format_number = format_number;
 exports.rand_name = rand_name;
+exports.new_session = new_session;
 
 /**
 Foncions équivalente PHP to JS

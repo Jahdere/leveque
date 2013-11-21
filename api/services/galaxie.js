@@ -153,10 +153,14 @@ var cycle = function()
 				var idJoueurs = joueurs[i].idJoueurs;
 				var idRessources = joueurs[i].RessourcesId;
 				var Pseudo = joueurs[i].Pseudo;
-				getPlanetes(idJoueurs, Pseudo, idRessources, function(Pseudo, idRessources, planetes) {
-					getRessources(Pseudo, idRessources, planetes, function(Pseudo, planetes, ressources) {
-						cycleJoueur(Pseudo, planetes, ressources, function (Pseudo, ressources, planetesSave) {
-							majPlanetes(Pseudo, ressources, planetesSave, function (Pseudo, ressources) {
+				var bilan = {};
+				bilan.JoueursId = joueurs[i].idJoueurs;
+				bilan.Session = joueurs[i].Session;
+				getPlanetes(idJoueurs, Pseudo, idRessources, bilan, function(Pseudo, idRessources, planetes, bilan) {
+					getRessources(Pseudo, idRessources, planetes, bilan, function(Pseudo, planetes, ressources, bilan) {
+						cycleJoueur(Pseudo, planetes, ressources, bilan, function (Pseudo, ressources, planetesSave, bilan) {
+							majPlanetes(Pseudo, ressources, planetesSave, bilan, function (Pseudo, ressources, bilan) {
+								logJoueur.logBilans(bilan);
 								ressources.save(function (err) {
 									if(err)
 										console.log(err);
@@ -171,7 +175,7 @@ var cycle = function()
 	});
 }
 
-var getPlanetes = function(idJoueurs, Pseudo, idRessources, next) {
+var getPlanetes = function(idJoueurs, Pseudo, idRessources, bilan, next) {
 	Planetes.findByJoueursId(idJoueurs).done(function(err, planetes) {
 		if(err)
 		{
@@ -179,12 +183,12 @@ var getPlanetes = function(idJoueurs, Pseudo, idRessources, next) {
 		}
 		else
 		{
-			next(Pseudo, idRessources, planetes);
+			next(Pseudo, idRessources, planetes, bilan);
 		}
 	});
 }
 
-var getRessources = function(Pseudo, idRessources, planetes, next) {
+var getRessources = function(Pseudo, idRessources, planetes, bilan, next) {
 	Ressources.findOneByIdRessources(idRessources).done(function(err, ressources) {
 		if(err)
 		{
@@ -192,12 +196,12 @@ var getRessources = function(Pseudo, idRessources, planetes, next) {
 		}
 		else
 		{
-			next(Pseudo, planetes, ressources);
+			next(Pseudo, planetes, ressources, bilan);
 		}
 	});
 }
 
-var cycleJoueur = function(Pseudo, planetes, ressources, next) {
+var cycleJoueur = function(Pseudo, planetes, ressources, bilan, next) {
 	var ecart = 0;
 	var bonheur = 0;
 	var argent = 0;
@@ -209,6 +213,12 @@ var cycleJoueur = function(Pseudo, planetes, ressources, next) {
 	var newTotal = 0;
 	var k = 0;
 	var planetesSave = new Array();
+	bilan.Argent = 0;
+	bilan.Aluminium = 0;
+	bilan.Titane = 0;
+	bilan.Carbone = 0;
+	bilan.Uranium = 0;
+	bilan.Matiere_Premiere = 0;
 
 	for (var j = planetes.length - 1; j >= 0; j--) 
 	{
@@ -231,6 +241,7 @@ var cycleJoueur = function(Pseudo, planetes, ressources, next) {
 
 				//On met à jour l'argent
 				ressources.Argent = (parseInt(ressources.Argent) + argent).toString();
+				bilan.Argent += argent;
 
 				//Production & consommation de Matière Première
 
@@ -245,6 +256,7 @@ var cycleJoueur = function(Pseudo, planetes, ressources, next) {
 					{
 						//On enlève directement le bonheur
 						bonheur -= Math.floor((Cons_Matiere_Premiere*0.007) * 100) / 100;
+						bilan.Matiere_Premiere += Prod_Matiere_Premiere - Cons_Matiere_Premiere;
 					}
 					else
 					{	
@@ -253,6 +265,7 @@ var cycleJoueur = function(Pseudo, planetes, ressources, next) {
 						if (newTotal > 0)
 						{
 							ressources.Matiere_Premiere = newTotal.toString();
+							bilan.Matiere_Premiere += Prod_Matiere_Premiere - Cons_Matiere_Premiere;
 							//Evolution du bonheur
 							if(parseInt(planetes[j].Taux_Imposition) > 50)
 							{
@@ -278,7 +291,7 @@ var cycleJoueur = function(Pseudo, planetes, ressources, next) {
 						{
 							//C'est la rupture de stock, on met la ressources à 0, on baisse le bonheur et on met rupture à true
 							ressources.Matiere_Premiere = "0";
-							
+							bilan.Matiere_Premiere += Prod_Matiere_Premiere - Cons_Matiere_Premiere;
 							rupture = 1;
 
 							//Evolution du bonheur
@@ -295,6 +308,7 @@ var cycleJoueur = function(Pseudo, planetes, ressources, next) {
 				{
 					//Si la prod est supérieur à la consommation 
 					ressources.Matiere_Premiere = (parseInt(ressources.Matiere_Premiere) + (Prod_Matiere_Premiere - Cons_Matiere_Premiere)).toString();
+					bilan.Matiere_Premiere += Prod_Matiere_Premiere - Cons_Matiere_Premiere;
 					//Evolution du bonheur
 					if(parseInt(planetes[j].Taux_Imposition) > 50)
 					{
@@ -345,25 +359,32 @@ var cycleJoueur = function(Pseudo, planetes, ressources, next) {
 				ressources.Titane = (parseInt(ressources.Titane) + (planetes[j].Niveau_Extraction * explodeRess[1])).toString();
 				ressources.Carbone = (parseInt(ressources.Carbone) + (planetes[j].Niveau_Extraction * explodeRess[2])).toString();
 				ressources.Uranium = (parseInt(ressources.Uranium) + (planetes[j].Niveau_Extraction * explodeRess[3])).toString();
+
+				bilan.Aluminium += (planetes[j].Niveau_Extraction * explodeRess[0]);
+				bilan.Titane += (planetes[j].Niveau_Extraction * explodeRess[1]);
+				bilan.Carbone += (planetes[j].Niveau_Extraction * explodeRess[2]);
+				bilan.Uranium += (planetes[j].Niveau_Extraction * explodeRess[3]);
 			break;
 			case 3:
 				//On rajoute juste la production de matière première
 				Matiere_Premiere = Math.floor(planetes[j].Matiere_Premiere * 0.7);
 				ressources.Matiere_Premiere = (parseInt(ressources.Matiere_Premiere) + Matiere_Premiere).toString();
+				bilan.Matiere_Premiere += Matiere_Premiere;
 			break;
 		}
 	}
-	next(Pseudo, ressources, planetesSave);
+
+	next(Pseudo, ressources, planetesSave, bilan);
 }
 
-var majPlanetes = function(Pseudo, ressources, planetesSave, next) {
+var majPlanetes = function(Pseudo, ressources, planetesSave, bilan, next) {
 	for (var j = 0; j < planetesSave.length; j++) {
 		planetesSave[j].save(function(err) {
 			if(err)
 				console.log(err)
 			
 			if(j == planetesSave.length)
-				next(Pseudo, ressources);
+				next(Pseudo, ressources, bilan);
 		});		
 	}
 }

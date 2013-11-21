@@ -19,6 +19,7 @@ module.exports = {
         joueur.Ressources = ressource;
         joueur.getPlaneteMere(function (planete) {
           joueur.PlaneteMere = planete;
+          joueur.socketSession = req.session.socketSession;
           res.view({joueur: joueur});
         });
       });

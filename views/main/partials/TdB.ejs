@@ -41,18 +41,12 @@
 			<li title="Espionnages">Espionnages</li>
 			<li title="Commerces">Commerces</li>
 		</ul>
-		<div class="list-Bilans">
-			<table>
-				<tr>
-					<td>Rapport de cycle</td>
-					<td>18/11 18:57</td>
-				</tr>
-			</table>
-		</div>
+		<table class="list-Bilans" style="border-collapse: collapse;">
+		</table>
 		<div class="list-Armees">
 			<table>
 				<tr>
-					<td style="font-size: 11px;">Rapport d'attaque</td>
+					<td>Rapport d'attaque</td>
 					<td>18/11 18:57</td>
 				</tr>
 			</table>
@@ -78,9 +72,89 @@
 </div>
 
 <script>
-	$("#bilans ul li").click(bilan);
+	var BilansModel = Backbone.Model.extend({
+		defaults: {
+            Titre: 'Pas de bilans',
+            Date : '-'
+        },
+        urlRoot: '/bilans'
+    });
 
-	function bilan()
+	var SailsCollection = Backbone.Collection.extend({
+		sailsCollection: "",
+		socket: null,
+		sync: function(method, model, options) {
+		var where = {JoueursId: <%= joueur.idJoueurs %>};
+		if (options.where) {
+			where = {
+				where: options.where
+			}
+		}
+		if(typeof this.sailsCollection === "string" && this.sailsCollection != "")
+		{
+			this.socket = io.connect();
+			this.socket.on("connect", _.bind(function() {
+				this.socket.request("/" + this.sailsCollection, where, _.bind(function (joueurs) {
+					this.set(joueurs);
+					}, this));
+
+					this.socket.on("bilan<%=session.socketSession%>", _.bind(function (bilan) {
+						var m = bilan.verb;
+						if (m === "create") {
+							this.add(bilan.data);
+						}
+						else if (m === "update") {
+							this.get(bilan.data.id).set(bilan.data);
+						}
+						else if (m === "destroy") {
+							this.remove(this.get(bilan.data.id));
+						}
+					}, this));
+				}, this));
+			}
+			else
+			{
+				console.log("Error : Cannot retrieve models because property 'sailsCollection' not set on the collection.");
+			}
+		}
+	});
+
+
+	var BilansCollection = SailsCollection.extend({
+		sailsCollection: 'bilans',
+		model: BilansModel,
+	});
+
+	var bilans = new BilansCollection();
+	bilans.fetch();
+	var bilan = new BilansModel();
+
+	
+
+	_.templateSettings = {
+    interpolate : /\{\{(.+?)\}\}/g
+};
+
+	var BilansView = Backbone.View.extend({
+    el: '.list-Bilans',
+    initialize: function () {
+        this.collection.on('add', this.render, this);
+        this.render();
+    },
+    template: _.template("<tr><td style=\"width: 60%;\">{{ Titre }} </td><td style=\"with: 33%\">{{ Date }}</td><td style=\"width: 7%; text-align: center\"><img src='/images/picto/nonLu.png' /></td></tr>"),
+        render: function () {
+            this.$el.html("");
+            this.collection.each(function(bilan){
+                this.$el.append(this.template(bilan.toJSON()));
+            }, this);
+    	}
+	});
+ 
+	var mView = new BilansView({collection: bilans});
+
+	$("#bilans ul li").click(bilanChange);
+
+	function bilanChange()
 	{
 		var current_section = $("#bilans ul li.active");
 		var next_section = $(this);

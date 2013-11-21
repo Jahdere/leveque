@@ -189,9 +189,15 @@ module.exports = {
   						}
   						else
   						{
-  							res.send(joueur);
                 //On met en session les infos joueurs
-                req.session.joueur = joueur;
+               
+                var session = general.new_session(hasher);
+                joueur.Session = session;
+                joueur.save(function (err) {
+                   req.session.joueur = joueur;
+                   req.session.socketSession = session;
+                   res.send(joueur);
+                });
   						}
   					});
   				}
