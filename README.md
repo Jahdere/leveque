@@ -9,7 +9,7 @@ WarEmpire
 - Résolution d'un ordre (OK) + bilans (OK) + Mettre etat batiment à 1 - <b>Maxime</b>
 - Lancement ordre + résolution au Bootstrap - Debug - <b>Baptiste</b>
 - Affichage "En cours de construction" - OK
-- Ajout des bâtiments dans le cycle - Baptiste
+- Ajout des bâtiments dans le cycle - <b>Baptiste</b>
 - Page bâtiment construit
 - Accès particulier : université + laboratoire
 - Débugguer check bâtiment planète sur micro lorsque le joueur a un bâtiment - <b>Maxime</b>
