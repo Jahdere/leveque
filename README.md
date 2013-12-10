@@ -6,7 +6,7 @@ WarEmpire
 ##TODO List
 
 - Ajout du bâtiment lorsque l'ordre est créé - OK
-- Résolution d'un ordre (OK) + bilans (OK) + Mettre etat batiment à 1 - <b>Maxime</b>
+- Résolution d'un ordre (OK) + bilans (OK) + Mettre etat batiment à 1 - <b>Maxime et Baptiste</b> - OK
 - Lancement ordre + résolution au Bootstrap - Debug - <b>Baptiste</b>
 - Affichage "En cours de construction" - OK
 - Ajout des bâtiments dans le cycle - <b>Baptiste</b>
