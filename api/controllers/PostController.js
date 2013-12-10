@@ -224,8 +224,7 @@ module.exports = {
     Planetes.findOneByIdPlanetes(idPlanetes).where({JoueursId: idJoueurs}).done(function(err, planete) {
       if(err)
       {
-        log.ErreurDb(err, "Récupération planète d'un joueur", "PostController::changeImposition");
-        
+        log.ErreurDb(err, "FIND planète d'un joueur", "PostController::changeImposition");
       }
       else
       {
@@ -239,6 +238,164 @@ module.exports = {
         else
         {
           
+        }
+      }
+    });
+  },
+  constructbatiment: function (req, res)
+  {
+    var async = require("async");
+    //La policies s'occupe de vérifier que le joueur possède bien la planète et qu'il peut construire le bâtiment
+    //On récupère les données
+    var idBatiments = req.param("idBatiment");
+    var idPlanetes = req.param("idPlanete"); 
+
+    var idJoueurs = req.session.joueur.idJoueurs; 
+
+    //On récupère ses ressources et le batiment
+    async.parallel({
+      'batiment': function (cb) {
+        Batiments.findOneByIdBatiments(idBatiments).done(function (err, batiment) {
+          if(err)
+          {
+            cb(err, null);
+          }
+          else
+          {
+            if(batiment)
+            {
+              cb(null, batiment)
+            }
+            else
+            {
+              cb(0, null);
+            }
+          }
+        });
+      },
+      'ressources': function (cb) {
+        Joueurs.findOneByIdJoueurs(idJoueurs).done(function (err, joueur) {
+          if(err)
+          {
+            cb(err, null);
+          }
+          else
+          {
+            if(joueur)
+            {
+              joueur.getRessources(function (ressources) {
+                cb(null, ressources)
+              });
+            }
+            else
+            {
+              cb(1, null);
+            }
+          }
+        });
+      }
+    },
+    function (err, results) {
+      if(err)
+      {
+        if(err == 0)
+          console.log("Tentative de construction : batiment introuvable");
+        else if(err == 1)
+          console.log("Tentative de construction : ressources introuvable")
+        else
+          log.ErreurDb(err, "FIND du joueur ou du batiment ", "PostController::consctructbatiment");
+      }
+      else
+      {
+        //Si il a assez d'argent
+        if(parseInt(results.ressources.Argent) > results.batiment.Prix 
+          && parseInt(results.ressources.Aluminium) > results.batiment.Aluminium 
+          && parseInt(results.ressources.Titane) > results.batiment.Titane 
+          && parseInt(results.ressources.Carbone) > results.batiment.Carbone 
+          && parseInt(results.ressources.Matiere_Premiere) > results.batiment.Matiere_Premiere)
+        {
+
+          //On met à jour les ressources
+          results.ressources.Argent = (parseInt(results.ressources.Argent) - results.batiment.Prix).toString();
+          results.ressources.Aluminium = (parseInt(results.ressources.Aluminium) - results.batiment.Aluminium).toString();
+          results.ressources.Titane = (parseInt(results.ressources.Titane) - results.batiment.Titane).toString();
+          results.ressources.Carbone = (parseInt(results.ressources.Carbone) - results.batiment.Carbone).toString();
+          results.ressources.Matiere_Premiere = (parseInt(results.ressources.Matiere_Premiere) - results.batiment.Matiere_Premiere).toString();
+          
+          //On prépare l'ordre à enregistrer
+          var now = new Date().getTime();
+          var titre = "Construction d'un bâtiment";
+          var message = 'Construction du bâtiment <a href="/batiment/id/'+idPlanetes+'/'+idBatiments+'">'+results.batiment.Nom+' sur la planète <a href="micro'+idPlanetes+'"">'+idPlanetes+'</a><br />Rien n\'a signaler';
+          var Ordre = {idJoueurs: idJoueurs, 
+                       Type: 1, 
+                       idJoueurs2: null, 
+                       PlanetesId: idPlanetes, 
+                       BatimentsId: idBatiments, 
+                       Titre: titre,
+                       Message: message,
+                       Date_Debut: now, 
+                       Temps: results.batiment.Temps,
+                       Etat: 0};
+          JSON.stringify(Ordre);
+
+          //On prépare le bâtiment à enregistrer
+          var BatimentsNew = {BatimentsId: idBatiments,
+                              PlanetesId: idPlanetes,
+                              Niveau: 1,
+                              Etat: 0}
+          JSON.stringify(BatimentsNew);
+
+          //On enregistre les ressources, l'ordre et le bâtiment en parallel
+          async.parallel({
+            'ressources': function (cb) {
+              results.ressources.save(function (err) {
+                if(err)
+                  cb(err, null)
+                else
+                {
+                  cb(null, "Ressources Save");
+                }
+              });
+            },
+            'ordre': function (cb) {
+              Ordres.create(Ordre).done(function (err, ordreSave) {
+                if(err)
+                  cb(err, null)
+                else
+                {
+                  cb(null, ordreSave);
+                }
+              });
+            },
+            'batiment': function (cb) {
+              Joueur_has_batiment.create(BatimentsNew).done(function (err, batimentSave) {
+                if(err)
+                  cb(err, null)
+                else
+                {
+                  cb(null, batimentSave);
+                }
+              });
+            }
+          },
+          function (err, Message) {
+            if(err)
+              console.log(err)
+            else
+            {
+              Message.ordre.sessionJoueur = req.session.socketSession;
+              ordre.asyncOrder(parseInt(Message.ordre.Temps), function() {
+                ordre.finishOrder(Message.ordre);
+              });
+              
+              res.redirect("/batiment/"+idPlanetes+"/"+idBatiments);
+            }
+          });
+        }
+        else
+        {
+          res.setHeader("error", "Pas assez de ressoures");
+          res.send(400, "Pas assez de ressoures");
         }
       }
     });

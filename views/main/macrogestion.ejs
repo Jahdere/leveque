@@ -34,13 +34,13 @@
                                 if(total > 0) 
                                 {
                                     %>
-                                    <span style="color: green">+ <%= total %></span>
+                                    <span class="green">+<%= total %></span>
                                     <%
                                 }
                                 else
                                 {
                                     %>
-                                    <span style="color: red">+ <%= total %></span>
+                                    <span class="red"><%= total %></span>
                                     <%
                                 }
                                 %>
@@ -154,11 +154,10 @@
         </div>
 
     </div>
-    <%- partial('partials/TdB') %>
+    <%- partial('../partials/TdB') %>
 </div>
 <script type="text/javascript">
-    //Appel ajax 
-    //en post pour connection
+    //redirection pour micro gestion d'une planète
     function redirect(e) {
         var id = $(e).find("#id").val();
         window.location = "/micro/"+id;

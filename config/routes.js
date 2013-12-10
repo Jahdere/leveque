@@ -54,6 +54,10 @@ module.exports.routes = {
     controller: 'post',
     action: 'updateimposition'
   },
+  '/batiment/construction': {
+    controller: 'post',
+    action: 'constructbatiment'
+  },  
 
   //Core du jeu
   '/play': {
@@ -69,6 +73,23 @@ module.exports.routes = {
   'get /micro/:id': {
     controller: 'main',
     action: 'microGestion'
+  },
+
+  //Controller batiment
+  //Vu d'un bâtiment simple
+  'get /batiment/:idPlanete/:idBatiment': {
+    controller: 'batiment',
+    action: 'details'
+  },
+  //Vu université 
+  '/universite': {
+    controller: 'batiment',
+    action: 'universite'
+  },
+  //Vu labo 
+  '/laboratoire': {
+    controller: 'batiment',
+    action: 'laboratoire'
   },
 
   //Create galaxie

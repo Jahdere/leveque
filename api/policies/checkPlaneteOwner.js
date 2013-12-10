@@ -12,7 +12,7 @@ module.exports = function (req, res, ok) {
   	Planetes.findOneByIdPlanetes(idPlanetes).where({JoueursId: idJoueurs}).done(function (err, planete) {
   		if(err)
   		{
-  			log.ErreurDb(err, "Erreur Db - Récupération Planète par idPlanetes et JoueursId", "policies/checkOwner::function() {};");
+  			log.ErreurDb(err, "Erreur Db - Récupération Planète par idPlanetes et JoueursId", "policies/checkPlaneteOwner::function() {};");
   			return res.redirect('/macro');
   		}
   		else

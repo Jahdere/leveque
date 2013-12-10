@@ -149,6 +149,7 @@ var cycle = function()
 		}
 		else
 		{
+			console.log(joueurs);
 			for (var i = 0; i < joueurs.length; i++) {
 				var idJoueurs = joueurs[i].idJoueurs;
 				var idRessources = joueurs[i].RessourcesId;
@@ -159,12 +160,12 @@ var cycle = function()
 				getPlanetes(idJoueurs, Pseudo, idRessources, bilan, function(Pseudo, idRessources, planetes, bilan) {
 					getRessources(Pseudo, idRessources, planetes, bilan, function(Pseudo, planetes, ressources, bilan) {
 						cycleJoueur(Pseudo, planetes, ressources, bilan, function (Pseudo, ressources, planetesSave, bilan) {
-							majPlanetes(Pseudo, ressources, planetesSave, bilan, function (Pseudo, ressources, bilan) {
-								logJoueur.logBilans(bilan);
-								ressources.save(function (err) {
-									if(err)
-										console.log(err);
-									console.log("Cycle effectué pour je joueur "+Pseudo);
+							logJoueur.logBilans(bilan);
+							ressources.save(function (err) {
+								if(err)
+									console.log(err);
+								console.log("Cycle effectué pour je joueur "+Pseudo);
+								majPlanetes(Pseudo, ressources, planetesSave, bilan, function (Pseudo, ressources, bilan) {
 								});
 							});
 						});

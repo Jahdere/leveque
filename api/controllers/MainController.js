@@ -59,7 +59,21 @@ module.exports = {
           else
           {
             joueur.Planete = Planete;
-            res.view({joueur: joueur});
+            //On récupère les bâtiments déjà construit sur la planète
+            Joueur_has_batiment.findByPlanetesId(joueur.Planete.idPlanetes).done(function (err, batiments) {
+              if(err)
+                log.ErreurDb(err, "Récupération bâtiments d'une planète", "MainController::microGestion");
+              else
+              {
+                planete.getBatimentDispo(joueur, batiments, function (BatimentNew, BatimentOwn) {
+                  joueur.Planete.BatimentNew = BatimentNew;
+                  joueur.Planete.BatimentOwn = BatimentOwn;
+                  /*console.log(BatimentNew);
+                  console.log(BatimentOwn);*/
+                  res.view({joueur: joueur});
+                });
+              }
+            });
           }
         });
       });

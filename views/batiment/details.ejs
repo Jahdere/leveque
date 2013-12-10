@@ -1,0 +1,70 @@
+<!-- Default home page -->
+<link type="text/css" href='http://sailsjs.org/styles/fonts.css' rel='stylesheet'/>
+<div class="container clearfix">
+    <div class="main">
+        <h4><%= joueur.batimentInfos.Nom %></h4><br />
+        <div class="DetailBatiment" id="<% if(!joueur.batimentJoueur) { %>DetailEcran<% } else { %>macroEcran<% } %>">
+            <span class="Detail">
+                <img src="/images/batiments/<%= joueur.batimentInfos.Image %>" />
+                <p>
+                    <%= joueur.batimentInfos.Description %>
+                </p>
+                <span class="temps"><%= joueur.batimentInfos.Temps/1000 %> Sec</span>
+                <p>
+                    <span class="red"><%= joueur.batimentInfos.Aluminium %></span> Aluminium - 
+                    <span class="red"><%= joueur.batimentInfos.Titane %></span> Titane - 
+                    <span class="red"><%= joueur.batimentInfos.Carbone %></span> Carbone
+                </p>
+            </span>
+            <span class="Up">
+                <% 
+                if(joueur.batimentJoueur)
+                {
+                    if(joueur.batimentJoueur.Etat == 1)
+                    {
+                        %>
+                        Améliorer
+                        <%
+                    }
+                    else
+                    {
+                        %>
+                        En cours de construction
+                        <%
+                    }
+                }
+                else
+                {
+                    %>
+                    <img src="/images/picto/construire.png" />Construire
+                    <%
+                }
+                %>
+            </span>
+        </div>
+
+    </div>
+    <%- partial('../partials/TdB') %>
+</div>
+<script type="text/javascript">
+    //Appel ajax qui envoi les infos batiments
+    //en post pour /batiment/construction
+    function construction(e) {
+        $.post(
+            '/batiment/construction',
+            {idBatiment: <%= joueur.idBatiment %>, idPlanete: <%= joueur.idPlanete %>},
+            function () {
+                
+            }
+        ).fail(function(res) {
+            alert(res.getResponseHeader("error"));
+        });
+       
+        
+    }
+    //Mise en place des events
+    $(".DetailBatiment .Up").click(function() {
+        construction(this);
+    });
+</script>
+

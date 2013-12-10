@@ -1,30 +1,29 @@
-//Fonction qui sert à encoder les pseudo, mot de passe, mail etc ... Sa fonction antonymique
-var encode = function (sujet)
-{
+var encode = function (sujet) {
+  //Fonction qui sert à encoder les pseudo, mot de passe, mail etc ... Sa fonction antonymique
   encode = htmlentities(htmlspecialchars(utf8_encode(sujet)));
 
   return encode;
 }
 
-//Fonction qui sert à décoder les pseudo, mot de passe, mail, etc ...
-var decode = function (sujet)
-{
+var decode = function (sujet) {
+  //Fonction qui sert à décoder les pseudo, mot de passe, mail, etc ...
   decode = utf8_decode(htmlspecialchars_decode(html_entity_decode(sujet)));
 
   return decode;
 }
 
-//Fonction qui retourne une session non hasher
-var new_session = function (hasher)
-{
+var new_session = function (hasher) {
+  //Fonction qui retourne une session non hasher
   var session = Math.floor((Math.random()*31513513)+120321).toString();
 
   return hasher.generate(session);
 }
 
-//Fonction qui transforme une date (au format string) en un tableau dans l'ordre attendu (Heure, Minute, Seconde, Mois, Jour, Année) pour la fonction mktime
-var date_to_array = function (date)
-{
+var date_to_array = function (date) {
+  //Fonction qui transforme une date (au format string) 
+  //en un tableau dans l'ordre attendu 
+  //(Heure, Minute, Seconde, Mois, Jour, Année) 
+  //pour la fonction mktime
   var explodeDate = date.split(' ');
 
   //Heure Minute Seconde
@@ -45,17 +44,43 @@ var date_to_array = function (date)
   return retour;
 }
 
-//Fonction qui transforme un timestamp en date pour base de donnée Y-m-d H:i:s
-//Voir équivalent date en js
-var timestamp_to_date = function (timestamp)
-{
+var date_to_timestamp = function (date) {
+  //Fonction qui transforme une date en timestamp
+  var arrayDate = date_to_array(date);
+  var TimestampDate = new Date();
+  TimestampDate.setFullYear(arrayDate["Annee"]);
+  TimestampDate.setMonth(arrayDate["Mois"]);
+  TimestampDate.setDate(arrayDate["Jour"]);
+  TimestampDate.setHours(arrayDate["Heure"]);
+  TimestampDate.setMinutes(arrayDate["Minute"]);
+  TimestampDate.setSeconds(arrayDate["Seconde"]);
+  TimestampDate.setMilliseconds(0);
+
+  return TimestampDate.getTime();
+} 
+
+var timestamp_to_date = function (timestamp) {
+  //Fonction qui transforme un timestamp en date pour base de donnée Y-m-d H:i:s
+  //Voir équivalent date en js
   return date('Y-m-d H:i:s', timestamp);
 }
 
-//Fonction qui met une date pour bdd au bon format (en mettant sur 2 chiffres)
-//Prend un objet date (new Date()) et qui retourne une chaine de caractère
-var formate_date = function (date)
-{
+var formate_date_bilan = function (date) {
+  //Fonction qui met une date pour bdd au bon format (en mettant sur 2 chiffres)
+  //Prend un objet date (new Date()) et qui retourne une chaine de caractère
+  var month = ("0" + (date.getMonth()+1).toString()).slice(-2);
+  var day = ("00" + date.getDate().toString()).slice(-2);
+  var hours = ("00" + date.getHours().toString()).slice(-2);
+  var minutes = ("00" + date.getMinutes().toString()).slice(-2);
+
+  var nowFormat = day+"/"+month+" "+hours+":"+minutes;
+
+  return nowFormat;
+}
+
+var formate_date = function (date) {
+  //Fonction qui met une date pour bdd au bon format (en mettant sur 2 chiffres)
+  //Prend un objet date (new Date()) et qui retourne une chaine de caractère
   var month = ("00" + date.getMonth().toString()).slice(-2);
   var day = ("00" + date.getDate().toString()).slice(-2);
   var hours = ("00" + date.getHours().toString()).slice(-2);
@@ -67,13 +92,13 @@ var formate_date = function (date)
   return nowFormat;
 }
 
-var format_number = function (number)
-{
+var format_number = function (number) {
+  //Fonction qui renvoi un nombre formatter au format : séparateur des milliers ( ), met une virgule pour les décimales
   return number_format(number, 0, ',', ' ');
 }
 
-var rand_name = function ()
-{
+var rand_name = function () { 
+  //Fonction qui renvoit un nombre aléatoire
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
   var string_length = 8;
   var randomstring = '';
@@ -84,23 +109,16 @@ var rand_name = function ()
   return randomstring;
 }
 
-//Fonction qui retourne une session hasher
-var new_session = function (hasher)
-{
-  var session = Math.floor((Math.random()*31513513)+120321).toString();
-
-  return hasher.generate(session);
-}
-
 exports.encode = encode;
 exports.decode = decode;
 exports.new_session = new_session;
 exports.date_to_array = date_to_array;
+exports.date_to_timestamp = date_to_timestamp;
 exports.timestamp_to_date = timestamp_to_date;
+exports.formate_date_bilan = formate_date_bilan;
 exports.formate_date = formate_date;
 exports.format_number = format_number;
 exports.rand_name = rand_name;
-exports.new_session = new_session;
 
 /**
 Foncions équivalente PHP to JS
@@ -108,7 +126,9 @@ utf8_encode & utf8_decode
 htmlentities & html_entity_decode
 htmlspecialchars & htmlspecialchars_decode
 md5
-Fonction privé
+number_format
+--
+Fonctions privées
 **/
 function utf8_encode (argString) {
   // http://kevin.vanzonneveld.net
@@ -283,7 +303,6 @@ function htmlentities (string, quote_style, charset, double_encode) {
 
   return string;
 }
-
 function html_entity_decode (string, quote_style) {
   // http://kevin.vanzonneveld.net
   // +   original by: john (http://www.jd-tech.net)

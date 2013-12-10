@@ -82,10 +82,6 @@
         font-weight:300;
         font-size:1.5em
     }
-    span
-    {
-        font-weight:700
-    }
     ul
     {
         margin-top:5%;
@@ -119,6 +115,15 @@
         height: 30px;
         cursor: pointer;
         margin-top: 5px;
+    }
+
+    .red 
+    {
+        color: red;
+    }
+    .green
+    {
+        color: green;
     }
     .container
     {
@@ -184,7 +189,7 @@
     {
         margin-bottom:10%;
         margin: 0 auto;
-        margin-bottom: 120px;
+        margin-bottom: 75px;
     }
     .side-bar ul li
     {
@@ -199,7 +204,7 @@
     .side-bar #bilans
     {
         width: 85%;
-        height: 170px;
+        height: 235px;
         margin: 0 auto;
         /*background-image: url("/images/bgPlaneteRender.png");*/
         border-radius: 15px;
@@ -249,7 +254,7 @@
     {
         width: 100%;
         border-collapse: collapse;
-        height: 150px;
+        height: 190px;
         overflow: auto;
         display: block;
 
@@ -265,17 +270,20 @@
         background-size: contain;
     }
 
-    .side-bar #bilans .list-Bilans::-webkit-scrollbar-thumb {                             /* Barre */
-    border: solid 0 transparent;
-    border-right-width: 1px;
-    border-left-width: 1px;
-    -webkit-border-radius: 9px;
-    -webkit-box-shadow: inset 0 0 0 1px rgb(36,175,195), inset 0 0 0 6px rgb(1,44,50);
-}
+    .side-bar #bilans .list-Bilans::-webkit-scrollbar-thumb 
+    {                             /* Barre */
+        border: solid 0 transparent;
+        border-right-width: 1px;
+        border-left-width: 1px;
+        -webkit-border-radius: 9px;
+        -webkit-box-shadow: inset 0 0 0 1px rgb(36,175,195), inset 0 0 0 6px rgb(1,44,50);
+    }
     .side-bar #bilans .list-Bilans tr
     {
         cursor: pointer;
-        border: none;
+        border: 1px solid transparent;
+        border-left: none;
+        border-right: none;
     }
     .side-bar #bilans .list-Bilans tr td img
     {
@@ -344,7 +352,7 @@
         background-image: url("/images/bgPlaneteRender.png");
         font-family: "consolas";
         width: 555px;
-        min-height: 300px;
+        min-height: 500px;
         color: white;
         border-radius: 15px;
     }
@@ -402,6 +410,23 @@
         text-decoration: underline;
     }
 
+    #planete #batiments
+    {
+        min-height: 200px;
+        width: 100%;
+        clear: both;
+        padding-top: 25px;
+        padding-left: 15px;
+    }
+
+    #planete #batiments img
+    {
+        width: 84px;
+        height: 84px;
+        cursor: pointer;
+        display: inline;
+    }
+
     #planetes .planete
     {
         width: 100px;
@@ -417,10 +442,66 @@
         margin-bottom: 25px;
     }
 
+    .DetailBatiment .Detail
+    {
+        min-height: 140px;
+        display: block;
+    }
+
+    .DetailBatiment .Detail img
+    {
+        width: 120px;
+        height: 120px;
+        float: left;
+    }
+
+    .DetailBatiment .Detail p
+    {
+        padding: 25px;
+        padding-left: 150px;
+        padding-bottom: 0px;
+        padding-top: 5px;
+    }
+
+    .DetailBatiment .Detail .temps
+    {
+        width: 100%; 
+        text-align: center;
+        display: block; 
+        font-size: 20px !important;
+    }
+
+    .DetailBatiment .Up
+    {
+        cursor: pointer;
+        border-radius: 5px;
+        border: 1px solid grey;
+        padding: 7px; 
+        float: left;
+        font-size: 15px !important;
+        background-image: url('/images/bgPlaneteRender.png');
+    }
+
+    .DetailBatiment .Up img
+    {
+        width: 24px;
+        height: 24px;
+        float: left;
+    }
+
     #macroEcran
     {
         width: 85%;
         height: 400px;
+        background-image: url('/images/bgPlaneteRender.png'); 
+        border-radius: 15px; 
+        padding: 25px;
+    }
+
+    #DetailEcran
+    {
+        width: 85%;
+        height: 190px;
         background-image: url('/images/bgPlaneteRender.png'); 
         border-radius: 15px; 
         padding: 25px;

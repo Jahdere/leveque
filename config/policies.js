@@ -19,11 +19,18 @@ module.exports.policies = {
   '*': true,
   MainController: {
   	'*': 'isAuthenticated',
-  	'microGestion': 'checkOwner'
+  	'microGestion': 'checkPlaneteOwner'
+  },
+  BatimentController: {
+  	'*': 'isAuthenticated',
+  	'details': 'checkBatimentOwner'
   },
   IndexController: {
   	'index': 'isUnauthenticated',
   	'logout': 'isAuthenticated'
+  },
+  PostController: {
+  	'constructbatiment': 'checkBatimentOwner'
   },
 
   /*

@@ -74,8 +74,8 @@
 <script>
 	var BilansModel = Backbone.Model.extend({
 		defaults: {
+			id: '',
             Titre: 'Pas de bilans',
-            Date : '-'
         },
         urlRoot: '/bilans'
     });
@@ -141,7 +141,7 @@
         this.collection.on('add', this.render, this);
         this.render();
     },
-    template: _.template("<tr><td style=\"width: 60%;\">{{ Titre }} </td><td style=\"with: 33%\">{{ Date }}</td><td style=\"width: 7%; text-align: center\"><img src='/images/picto/nonLu.png' /></td></tr>"),
+    template: _.template("<tr class=\"bilanLink\"><td style=\"width: 60%;\">{{ Titre }} </td><td style=\"with: 33%\">{{ Date }}</td><td style=\"width: 7%; text-align: center\"><img src='/images/picto/nonLu.png' /><input type=\"hidden\" name=\"id\" id=\"id\" value=\"{{ id }}\" /></td></tr>"),
         render: function () {
             this.$el.html("");
             this.collection.each(function(bilan){
@@ -165,4 +165,15 @@
 		$(".list-"+next_section.attr("title")).show();
 
 	}
+
+	//Appel ajax 
+    //en post pour accéder au détail d'un bilan
+    function redirect(e) {
+        var id = $(e).find("#id").val();
+        window.location = "/bilan /"+id;
+    }
+    //Mise en place de l'event
+    $(document).on("click", ".side-bar #bilans .list-Bilans .bilanLink", function (e) {
+        redirect(this);
+    });
 </script>
