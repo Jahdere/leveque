@@ -26,7 +26,7 @@ var finishOrder = function (Ordre)
 						switch(ordre.Type)
 						{
 							case 1:
-								//Simple bilan
+								//Construction
 								var bilan = {JoueursId: ordre.idJoueurs, 
 											 Message: ordre.Message,
 											 Titre: ordre.Titre,
@@ -44,6 +44,7 @@ var finishOrder = function (Ordre)
 										console.log("Ordre n°"+Ordre.id+" vient de s'exécuté ("+Ordre.Temps/1000+") sec");
 									}
 								});
+
 								break;
 						}
 					}

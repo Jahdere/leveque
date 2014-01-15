@@ -13,6 +13,11 @@ module.exports.bootstrap = function (cb) {
   // It's very important to trigger this callack method when you are finished 
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
 
+  require('nodetime').profile({
+    accountKey: '79ae4a884e2e4ca846e9e1191c994343a28b7290', 
+    appName: 'WarEmpire'
+  });
+
   //Lancement du cron qui se lance tous les soirs à 00h00 pour la résolution des cycles
   	var cronJob = require('cron').CronJob;
 	var job = new cronJob('00 00 00 * * 1-7', function(){
