@@ -15,6 +15,7 @@ var finishOrder = function (Ordre)
 			if(ordre)
 			{
 				ordre.Etat = 1;
+				var async = require('async');
 				ordre.save(function (err) {
 					if(err)
 						log.ErreurDb(err, "Sauvegarde d'un Ordre", "services/ordre::finishOrder");
@@ -33,17 +34,72 @@ var finishOrder = function (Ordre)
 											 Date: nowFormat,
 											 Lu: 0}
 
-								Bilans.create(bilan).done(function (err, bilanCreate) {
-									if(err)
-										log.ErreurDb(err, "Sauvegarde d'un bilan", "services/ordre::finishOrder");
-									else
-									{
-										sails.io.sockets.emit("connect", function() {
-											sails.io.sockets.emit("bilan"+Ordre.sessionJoueur, bilanCreate);
+								async.parallel({
+									'bilan': function(cb){
+										Bilans.create(bilan).done(function (err, bilanCreate) {
+											if(err)
+												cb(err,null);
+												//log.ErreurDb(err, "Sauvegarde d'un bilan", "services/ordre::finishOrder");
+											else
+											{
+												sails.io.sockets.emit("connect", function() {
+													sails.io.sockets.emit("bilan"+Ordre.sessionJoueur, bilanCreate);
+												});
+												cb(null, bilanCreate);
+											}
 										});
-										console.log("Ordre n°"+Ordre.id+" vient de s'exécuté ("+Ordre.Temps/1000+") sec");
+
+									},
+									'batiment': function(cb){
+										Joueur_has_batiment.findOneByBatimentsId(Ordre.BatimentsId)
+															.where({PlanetesId: Ordre.PlanetesId, Etat: 0})
+																.done(function(err, batiment){
+											if(err)
+												cb(err, null);
+											else
+											{
+												if(batiment)
+												{
+													batiment.Etat=1;
+													batiment.save(function(err){
+														if (err)
+														{
+															cb(err, null);
+														}
+														else
+														{
+															cb(null, batiment);
+														}
+													});
+												}
+												else
+												{
+													cb(0, null);
+												}
+											}
+										});
+
+
 									}
-								});
+								},
+    							function (err, results) {
+    								if(err)
+    								{
+    									if(err==0)
+    										console.log("Erreur: Pas de batiments trouvé")
+    									else
+    										log.ErreurDb(err, "Modification etat batiment", "services/ordres::finishOrder");
+    								}
+    								else
+    								{
+    									console.log("Ordre n°"+Ordre.id+" vient de s'exécuté ("+Ordre.Temps/1000+") sec");
+    									console.log("Bilan créé :"+results.bilan.id);
+    									console.log("Batiment n°"+results.batiment.BatimentsId+"sur la Planète n°"+results.batiment.PlanetesId+" a été créé");
+    								}
+    									
+    							});
+
+
 								break;
 						}
 					}

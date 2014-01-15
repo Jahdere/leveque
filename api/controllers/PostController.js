@@ -308,11 +308,11 @@ module.exports = {
       else
       {
         //Si il a assez d'argent
-        if(parseInt(results.ressources.Argent) > results.batiment.Prix 
-          && parseInt(results.ressources.Aluminium) > results.batiment.Aluminium 
-          && parseInt(results.ressources.Titane) > results.batiment.Titane 
-          && parseInt(results.ressources.Carbone) > results.batiment.Carbone 
-          && parseInt(results.ressources.Matiere_Premiere) > results.batiment.Matiere_Premiere)
+        if(parseInt(results.ressources.Argent) >= results.batiment.Prix 
+          && parseInt(results.ressources.Aluminium) >= results.batiment.Aluminium 
+          && parseInt(results.ressources.Titane) >= results.batiment.Titane 
+          && parseInt(results.ressources.Carbone) >= results.batiment.Carbone 
+          && parseInt(results.ressources.Matiere_Premiere) >= results.batiment.Matiere_Premiere)
         {
 
           //On met à jour les ressources
