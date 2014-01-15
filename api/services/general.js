@@ -81,7 +81,7 @@ var formate_date_bilan = function (date) {
 var formate_date = function (date) {
   //Fonction qui met une date pour bdd au bon format (en mettant sur 2 chiffres)
   //Prend un objet date (new Date()) et qui retourne une chaine de caractère
-  var month = ("00" + date.getMonth().toString()).slice(-2);
+  var month = ("00" + (date.getMonth()+1).toString()).slice(-2);
   var day = ("00" + date.getDate().toString()).slice(-2);
   var hours = ("00" + date.getHours().toString()).slice(-2);
   var minutes = ("00" + date.getMinutes().toString()).slice(-2);

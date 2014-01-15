@@ -144,6 +144,7 @@
     template: _.template("<tr class=\"bilanLink\"><td style=\"width: 60%;\">{{ Titre }} </td><td style=\"with: 33%\">{{ Date }}</td><td style=\"width: 7%; text-align: center\"><img src='/images/picto/nonLu.png' /><input type=\"hidden\" name=\"id\" id=\"id\" value=\"{{ id }}\" /></td></tr>"),
         render: function () {
             this.$el.html("");
+            this.collection.models.reverse();
             this.collection.each(function(bilan){
                 this.$el.append(this.template(bilan.toJSON()));
             }, this);
