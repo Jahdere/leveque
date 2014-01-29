@@ -16,4 +16,4 @@ WarEmpire
 | Accès particulier : université + laboratoire                      |             | A faire           |
 | Check bâtiment planète sur micro lorsque le joueur a un bâtiment  | `Baptste`   | **Done & Commit** |
 | Affichage détails bilans + gestion (suppr, archivage)             | `Paulo`     | En cours          |
-| Refresh page quand on lance la construction d'un bâtiment         | `Baptiste`  | En cours          |
+| Refresh page quand on lance la construction d'un bâtiment         | `Baptiste`  | **Done & Commit** |
