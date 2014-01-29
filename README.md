@@ -5,13 +5,15 @@ WarEmpire
 
 ##TODO List
 
-- Ajout du bâtiment lorsque l'ordre est créé - OK
-- Résolution d'un ordre (OK) + bilans (OK) + Mettre etat batiment à 1 - <b>Maxime et Baptiste</b> - OK 
-- Lancement ordre + résolution au Bootstrap - Debug - 
-- Affichage "En cours de construction" - OK
-- Ajout des bâtiments dans le cycle - <b>Baptiste</b>
-- Page bâtiment construit (check si améliorable ou pas, bouton dispo ou pas en conséquence)
-- Accès particulier : université + laboratoire
-- Débugguer check bâtiment planète sur micro lorsque le joueur a un bâtiment - <b>Baptiste</b> - OK
-- Affichage détails bilans - <b>Paulo</b>
-- Debug si batiment déjà en construction bouton non cliquable (refresh de la page) - <b>Baptiste</b>
+|                              Tâche                                |   Qui ?     |       Etat        |
+| ----------------------------------------------------------------- | ----------- | ----------------- |
+| Ajout du bâtiment lorsque l'ordre est créé                        | `Baptiste`  | **Done & Commit** |
+| Résolution d'un ordre + bilans + Mettre etat batiment à 1         | `Maxime`    | **Done & Commit** |
+| Lancement ordre + résolution au Bootstrap                         |             | Debug             |
+| Affichage "En cours de construction"                              | `Baptiste`  | **Done & Commit** |
+| Ajout des bâtiments dans le cycle                                 | `Baptiste`  | En cours          |
+| Page bâtiment construit (check si améliorable ou pas)             |             | A faire           |
+| Accès particulier : université + laboratoire                      |             | A faire           |
+| Check bâtiment planète sur micro lorsque le joueur a un bâtiment  | `Baptste`   | **Done & Commit** |
+| Affichage détails bilans + gestion (suppr, archivage)             | `Paulo`     | En cours          |
+| Refresh page quand on lance la construction d'un bâtiment         | `Baptiste`  | En cours          |
