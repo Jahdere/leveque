@@ -54,7 +54,7 @@
             '/batiment/construction',
             {idBatiment: <%= joueur.idBatiment %>, idPlanete: <%= joueur.idPlanete %>},
             function () {
-                
+                window.location.reload();
             }
         ).fail(function(res) {
             alert(res.getResponseHeader("error"));
