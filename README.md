@@ -15,6 +15,8 @@ WarEmpire
 | Ajout des bâtiments dans le cycle                                 | `Baptiste`  | En cours          |
 | Page bâtiment construit (check si améliorable ou pas)             |             | A faire           |
 | Accès particulier : université + laboratoire                      |             | A faire           |
+| Développement des sciences                                        |             | A faire           |
 | Check bâtiment planète sur micro lorsque le joueur a un bâtiment  | `Baptste`   | **Done & Commit** |
 | Affichage détails bilans + gestion (suppr, archivage)             | `Paulo`     | En cours          |
 | Refresh page quand on lance la construction d'un bâtiment         | `Baptiste`  | **Done & Commit** |
+
