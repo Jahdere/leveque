@@ -31,7 +31,7 @@ module.exports.policies = {
   },
   PostController: {
   	'constructbatiment': 'checkBatimentOwner'
-  },
+  }
 
   /*
 	// Here's an example of adding some policies to a controller

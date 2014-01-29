@@ -113,6 +113,14 @@
                     <%
                 }
                 %>
+                <% 
+                for(i=0; i<joueur.Planete.BatimentNew.Batiments.length;i++)
+                { 
+                    %>
+                    <a href="/batiment/<%= joueur.Planete.idPlanetes %>/<%= joueur.Planete.BatimentNew.Sciences[i].idBatiments %>"><img class="newBatiment" src="/images/batiments/<%= joueur.Planete.BatimentNew.Sciences[i].Image %>" title="<%= joueur.Planete.BatimentNew.Sciences[i].Nom %>" />
+                    <%
+                }
+                %>
             </div>
         </div>
     </div>

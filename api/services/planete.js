@@ -1,8 +1,9 @@
 var getBatimentDispo = function (joueur, batimentsJoueur, next) 
 {
 	var BatimentNew = {};
+	BatimentNew.Batiments = new Array();
 	BatimentNew.Sciences = new Array();
-	BatimentNew.Orphelins = {};
+	BatimentNew.Orphelins = new Array();
 
 	var BatimentOwn = {};
 
@@ -12,7 +13,7 @@ var getBatimentDispo = function (joueur, batimentsJoueur, next)
 	if(batimentsJoueur.length == 0)
 	{
 		//On check si il y a des bâtiments qui ne nécessite pas d'autre bâtiment
-		Batiments.findByDependance_Table('-').where({Type_Planete: joueur.Planete.Type}).done(function (err, batimentsOrphelins) {
+		Batiments.findByDependance_Table('-').where({Type_Planete: joueur.Planete.Type, Planete_Mere: joueur.Planete.Planete_Mere}).done(function (err, batimentsOrphelins) {
 			if(err)
 				log.ErreurDb(err, "Récupération des premiers bâtiments constructibles", "services/planete::getBatimentDispo");
 			else
@@ -72,14 +73,14 @@ var getBatimentDispo = function (joueur, batimentsJoueur, next)
 			}
 		});	
 	}
-	//Sinon
+	//Sinon (on a déjà un bâtiment de construit)
 	else
 	{
-		async.series([
-			function (next)
+		async.parallel({
+			AllBatiments: function (next)
 			{
 				//On récupère tous les bâtiments
-				Batiments.find().done(function (err, BatimentsAll) {
+				Batiments.find().where({Type_Planete: joueur.Planete.Type, Planete_Mere: joueur.Planete.Planete_Mere}).done(function (err, BatimentsAll) {
 					if(err)
 					{
 						log.ErreurDb(err, "Récupération de tous les bâtiments", "services/planete::getBatimentDispo");
@@ -91,7 +92,7 @@ var getBatimentDispo = function (joueur, batimentsJoueur, next)
 					}
 				});
 			},
-			function (next)
+			SciencesJoueur: function (next)
 			{
 				//On récupère les sciences du joueur qui ont un rapport avec les bâtiments
 				Joueur_has_science.findByJoueursId(joueur.idJoueurs).where({Batiment: 1}).done(function (err, SciencesJoueur) {
@@ -106,69 +107,143 @@ var getBatimentDispo = function (joueur, batimentsJoueur, next)
 					}
 				});
 			}
-		],
+		},
 		function (err, results)
 		{
-			console.log(results);
+			//On boucle sur tous les bâtiments
+			var i = 0;
+			async.whilst(
+				function () { return i < results.AllBatiments.length; },
+			    function (next) {
+			    	//On check l'état du bâtiment pour cette planète
+			    	checkEtatBatiment(results.AllBatiments[i], joueur, function (etat) {
+			    		var etatSplit = etat.split('#');
+			    		console.log(etatSplit);
+			    		if(etatSplit[0] == "1")
+			    		{
+			    			//Constructible donc on le rajoute au tableau batimentNew 
+			    			if(etatSplit[1] == "0")
+			    			{
+			    				BatimentNew.Orphelins.push(results.AllBatiments[i])
+			    			}
+			    			else if(etatSplit[1] == "1")
+			    			{
+			    				BatimentNew.Sciences.push(results.AllBatiments[i]);
+			    			}
+			    			else
+			    			{
+			    				BatimentNew.Batiments.push(results.AllBatiments[i]);
+			    			}
+			    		}
+			    		//On passe à l'élément suivant
+		        		i++;
+		        		next();
+			    	});
+					
+			    },
+			    function (err) {
+			        //Une fois la boucle finit en synchrone, on appelle la callback
+			        JSON.stringify(BatimentNew.Orphelins);
+			        JSON.stringify(BatimentNew.Batiments);
+			        JSON.stringify(BatimentNew.Sciences);
+			        console.log(BatimentOwn);
+					next(BatimentNew, BatimentOwn);
+			    }
+			);
 		});
-		//On récupère tous les bâtiments
-		/*Batiments.find().done(function (err, BatimentsAll) {
-			if(err)
-				log.ErreurDb(err, "Récupération de tous les bâtiments", "services/planete::getBatimentDispo");
-			else
-			{
-				var i = 0;
-				async.whilst(
-					function () { return i < BatimentsAll.length; },
-				    function (next) {
-				    	//Si l'évolution d'un bâtiment dépends d'une science
-						if(batimentsAll[batimentsJoueur[i].idBatiments-1].Dependance_Table == "science")
-						{
-							Joueur_has_science.findOneByIdSciences(BatimentsAll[i].DependanceId)
-											  .where({Etat: 1})
-											  .done(function (err, science) {
-								if(err)
-									log.ErreurDb(err, "Récupération de tous les bâtiments", "services/planete::getBatimentDispo");
-								else
-								{
-									//Si le joueur possède la science
-									if(science.length != 0)
-									{
-										//Si la dépendance est de type n (Niveau Batiment = Niveau science)
-										if(batimentsJoueur[i].Dependance_Niveau == "n")
-										{
-											//Si le niveau de la science est supérieur ou égal au niveau du bâtiment supérieur, 
-											//on autorise la construction
-											if(science.Niveau >= (batimentsJoueur[i].Niveau + 1))
-												batimentsJoueur[i].Up = 1;
-											else
-												batimentsJoueur[i].Up = 0;
-										}
-									}
-								}
-							});
-						}
-						//Sinon, c'est qu'elle dépends d'un bâtiment
-						else
-						{
-							
-						}
-						i++;
-						next();	
-				    },
-				    function (err) {
-				        //Une fois la boucle finit en synchrone, on appelle la callback
-				        JSON.stringify(BatimentNew.Sciences);
-						next(BatimentNew, BatimentOwn);
-				    }
-				);
-				
-				//Puis on test si de nouveaux bâtiments sont constructible
+	}
+}
+var checkEtatBatiment = function (batiment, joueur, cb)
+{
+	var etat = "";
+	//On check quel est le type de dépendance
+	console.log(batiment.Dependance_Table);
+	switch(batiment.Dependance_Table)
+	{
+		case '-':
+		  etat = "1#0";
+		  break;
+		case 'sciences':
+		  	//On vérifie que le joueur à la bonne science
+	  		Joueur_has_science.findOneBySciencesId(batiment.Dependance_Id).where({JoueursId: joueur.idJoueurs}).done(function (err, scienceRequise) {
+			    if(err)
+			    {
+			      log.ErreurDb(err, "Erreur Db - Récupération d'une science par idSciences et idJoueurs", "services/planete::checkEtatBatiment");
+			      return res.redirect('/micro/'+planete.idPlanetes);
+			    }
+			    else
+			    {
+			      if(scienceRequise)
+			      {
+			      	console.log(scienceRequise);
+			      	//Si il a la science il faut vérifier qu'elle soit au bon niveau
+			      	//Si la science est au bon niveau
+			        if(batiment.Dependance_Niveau == "n" || batiment.Dependance_Niveau == "unique")
+			        {
+			          niveauRequis = 1;
+			        }
 
-				//On appelle la callback
-				next(BatimentNew, BatimentOwn);
-			}
-		});*/
+			        if(scienceRequise.Niveau >= niveauRequis)
+			        {
+			          console.log("Niveau suffisant. Accès autorisé.");
+			          etat = "1#1";
+			        }
+			        else
+			        {
+			          etat = "2#1";
+			        }
+			      }
+			      else
+			      {
+			      	//Sinon le bâtiment n'est pas constructible
+			      	etat = "2#1";
+			      }
+			      cb(etat);
+			    }
+			});
+		  break;
+		case 'batiments':
+		  //On vérifie que le joueur à la bon bâtiment
+		  Joueur_has_batiment.findOneByPlanetesId(joueur.Planete.idPlanetes).where({BatimentsId: batiment.Dependance_Id}).done(function (err, batimentRequis) {
+		    if(err)
+		    {
+		      log.ErreurDb(err, "Erreur Db - Récupération d'un bâtiment par idBatiments et idPlanetes", "policies/checkBatimentOwner::function() {};");
+		      return res.redirect('/micro/'+planete.idPlanetes);
+		    }
+		    else
+		    {
+		      if(batimentRequis)
+		      {
+		        //Si le batiment est au bon niveau
+		        if(batiment.Dependance_Niveau == "n" || batiment.Dependance_Niveau == "unique")
+		        {
+		          niveauRequis = 1;
+		        }
+		        else
+		        {
+		          niveauRequis = 2;
+		        }
+
+		        if(batimentRequis.Niveau >= niveauRequis)
+		        {
+		          //Le niveau est bon
+		          etat = "1#2";
+		        }
+		        else
+		        {
+		          //Le niveau n'est pas bon
+		          etat = "2#2";
+		        }
+		      }
+		      else
+		      {
+		        //Le joueur ne possède pas le bâtiment requis
+		        etat = "2#2";
+		      }
+		      cb(etat);
+		    }
+		  });
+		  break;
 	}
 }
 
